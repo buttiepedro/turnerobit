@@ -1,10 +1,14 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text
-from sqlalchemy.dialects.postgresql import TIMESTAMPTZ, UUID
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text, TIMESTAMP
+from sqlalchemy.dialects.postgresql import UUID
 
 from app.db.base import Base
+
+
+def utcnow():
+    return datetime.now(timezone.utc)
 
 
 class Agenda(Base):
@@ -18,4 +22,4 @@ class Agenda(Base):
     max_future_days = Column(Integer, nullable=False, default=30)
     is_active = Column(Boolean, nullable=False, default=True)
     color = Column(String(7), nullable=False, default="#3B82F6")
-    created_at = Column(TIMESTAMPTZ, default=datetime.utcnow)
+    created_at = Column(TIMESTAMP(timezone=True), default=utcnow)

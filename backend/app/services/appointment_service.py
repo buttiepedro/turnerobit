@@ -1,5 +1,5 @@
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from fastapi import HTTPException
 from sqlalchemy import select
@@ -95,7 +95,7 @@ class AppointmentService:
         if appt.status in ("completed", "cancelled"):
             raise HTTPException(409, "No se puede cancelar en el estado actual")
         appt.status = "cancelled"
-        appt.cancelled_at = datetime.utcnow()
+        appt.cancelled_at = datetime.now(timezone.utc)
         appt.cancelled_by = uuid.UUID(cancelled_by)
         appt.cancel_reason = reason
         await self.db.commit()

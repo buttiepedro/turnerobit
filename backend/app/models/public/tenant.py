@@ -1,10 +1,14 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 
-from sqlalchemy import Boolean, Column, Integer, String, Text
-from sqlalchemy.dialects.postgresql import JSONB, TIMESTAMPTZ, UUID
+from sqlalchemy import Boolean, Column, Integer, String, TIMESTAMP
+from sqlalchemy.dialects.postgresql import JSONB, UUID
 
 from app.db.base import Base
+
+
+def utcnow():
+    return datetime.now(timezone.utc)
 
 
 class Tenant(Base):
@@ -19,5 +23,5 @@ class Tenant(Base):
     is_active = Column(Boolean, nullable=False, default=True)
     plan = Column(String(50), default="basic")
     settings = Column(JSONB, default=dict)
-    created_at = Column(TIMESTAMPTZ, default=datetime.utcnow)
-    updated_at = Column(TIMESTAMPTZ, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(TIMESTAMP(timezone=True), default=utcnow)
+    updated_at = Column(TIMESTAMP(timezone=True), default=utcnow, onupdate=utcnow)

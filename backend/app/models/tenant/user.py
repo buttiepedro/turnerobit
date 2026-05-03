@@ -1,10 +1,14 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 
-from sqlalchemy import Boolean, Column, String, Text
-from sqlalchemy.dialects.postgresql import TIMESTAMPTZ, UUID
+from sqlalchemy import Boolean, Column, String, Text, TIMESTAMP
+from sqlalchemy.dialects.postgresql import UUID
 
 from app.db.base import Base
+
+
+def utcnow():
+    return datetime.now(timezone.utc)
 
 
 class User(Base):
@@ -16,4 +20,4 @@ class User(Base):
     full_name = Column(String(200), nullable=False)
     role = Column(String(50), nullable=False, default="usuario_agenda")
     is_active = Column(Boolean, nullable=False, default=True)
-    created_at = Column(TIMESTAMPTZ, default=datetime.utcnow)
+    created_at = Column(TIMESTAMP(timezone=True), default=utcnow)

@@ -1,10 +1,14 @@
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 
-from sqlalchemy import Column, Date, ForeignKey, String, Text, Time
-from sqlalchemy.dialects.postgresql import TIMESTAMPTZ, UUID
+from sqlalchemy import Column, Date, ForeignKey, String, Text, Time, TIMESTAMP
+from sqlalchemy.dialects.postgresql import UUID
 
 from app.db.base import Base
+
+
+def utcnow():
+    return datetime.now(timezone.utc)
 
 
 class Appointment(Base):
@@ -22,8 +26,8 @@ class Appointment(Base):
     notes = Column(Text, nullable=True)
     client_notes = Column(Text, nullable=True)
     created_by = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
-    cancelled_at = Column(TIMESTAMPTZ, nullable=True)
+    cancelled_at = Column(TIMESTAMP(timezone=True), nullable=True)
     cancelled_by = Column(UUID(as_uuid=True), ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
     cancel_reason = Column(Text, nullable=True)
-    created_at = Column(TIMESTAMPTZ, default=datetime.utcnow)
-    updated_at = Column(TIMESTAMPTZ, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(TIMESTAMP(timezone=True), default=utcnow)
+    updated_at = Column(TIMESTAMP(timezone=True), default=utcnow, onupdate=utcnow)
