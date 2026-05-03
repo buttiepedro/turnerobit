@@ -1,6 +1,11 @@
 """Seed initial superadmin and optional demo tenant."""
 import asyncio
+import sys
 import uuid
+from pathlib import Path
+
+# Ensure /app (project root) is in sys.path when running as python scripts/seed.py
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from app.core.security import hash_password
 from app.db.session import AsyncSessionLocal
