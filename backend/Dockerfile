@@ -6,5 +6,8 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
+RUN chmod +x start.sh
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Local dev: override CMD in docker-compose to skip migrations
+# Railway / production: start.sh runs alembic upgrade head first
+CMD ["./start.sh"]
