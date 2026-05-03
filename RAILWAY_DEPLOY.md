@@ -46,9 +46,9 @@ Railway inyecta `DATABASE_URL` automáticamente en el servicio que lo referencie
 
 | Variable | Valor |
 |---|---|
-| `BACKEND_URL` | URL pública del backend, ej: `https://turnos-backend.up.railway.app` |
+| `API_URL` | URL pública del backend **incluyendo `/api`**, ej: `https://turnos-backend.up.railway.app/api` |
 
-> Nginx proxea `/api/` → `$BACKEND_URL/api/` en runtime, sin rebuild.
+> El contenedor genera `/env-config.js` con `window.__API_URL__` en runtime, sin rebuild. El frontend lo lee al cargar la página.
 
 ### 5. Seed inicial (una sola vez)
 
@@ -73,5 +73,5 @@ ACCESS_TOKEN_EXPIRE_MINUTES=60
 
 ### Frontend
 ```
-BACKEND_URL=https://<tu-backend>.up.railway.app
+API_URL=https://<tu-backend>.up.railway.app/api
 ```
