@@ -51,6 +51,13 @@ class UserService:
         await self.db.refresh(user)
         return user
 
+    async def reset_password(self, user_id: str, new_password: str) -> User:
+        user = await self.get_user(user_id)
+        user.hashed_password = hash_password(new_password)
+        await self.db.commit()
+        await self.db.refresh(user)
+        return user
+
     async def authenticate(self, email: str, password: str) -> User:
         user = await self.get_by_email(email)
         if not user or not verify_password(password, user.hashed_password):
